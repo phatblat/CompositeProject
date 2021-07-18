@@ -1,2 +1,6 @@
+/*
+ * settings.gradle
+ */
+
 rootProject.name = "CompositeProject"
 include ':app'
