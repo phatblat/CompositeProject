@@ -2,23 +2,38 @@
  * settings.gradle
  */
 
-rootProject.name = "CompositeProject"
-include ':app'
-
+// Configuration for the "plugins" block. Must be first in settings.
 // Workaround to make the JUnit Platform Gradle Plugin available using the `plugins` DSL
 // See: https://github.com/junit-team/junit5/issues/768#issuecomment-330078905
 pluginManagement {
-    // Repos used by the "plugins" block.
     repositories {
         gradlePluginPortal()
     }
     resolutionStrategy {
         eachPlugin {
-            when (requested.id.id) {
-                "org.junit.platform.gradle.plugin" ->
+            switch(requested.id.id) {
+                case "org.junit.platform.gradle.plugin":
                     useModule("org.junit.platform:junit-platform-gradle-plugin:${requested.version}")
-                else -> Unit
+                    break
             }
+        }
+    }
+}
+
+rootProject.name = "CompositeProject"
+include ':app'
+
+/*
+ * Composite Project configurations.
+ */
+
+// Clone ShellExec to sibling directory to build from source.
+File pluginProject = file("../ShellExec")
+if (pluginProject.exists()) {
+    // Include PipelineGradlePlugin project in composite build
+    includeBuild(pluginProject) {
+        dependencySubstitution {
+            substitute module('at.phatbl:shellexec') with project(':')
         }
     }
 }
