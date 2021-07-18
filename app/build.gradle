@@ -11,12 +11,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion project.compileSdkVersion.toInteger()
 
     defaultConfig {
         applicationId "at.phatbl.compositeproject"
-        minSdkVersion 28
-        targetSdkVersion 30
+        minSdkVersion project.minSdkVersion.toInteger()
+        targetSdkVersion project.targetSdkVersion.toInteger()
         versionCode project.versionCode.toInteger()
         versionName project.versionName
 
