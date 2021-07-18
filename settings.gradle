@@ -3,9 +3,16 @@
  */
 
 // Configuration for the "plugins" block. Must be first in settings.
+// https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_management
+//
 // Workaround to make the JUnit Platform Gradle Plugin available using the `plugins` DSL
 // See: https://github.com/junit-team/junit5/issues/768#issuecomment-330078905
 pluginManagement {
+    plugins {
+        id 'com.android.application' version "${agp_version}" apply false
+        id "org.jetbrains.kotlin.android" version "${kotlin_version}" apply false
+        id "at.phatbl.shellexec" version "1.5.2" apply false
+    }
     repositories {
         gradlePluginPortal()
         google()
