@@ -4,10 +4,12 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "com.android.tools.build:gradle:$agp_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'at.phatbl:shellexec:+'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -20,4 +22,10 @@ allprojects {
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
     }
+}
+
+import at.phatbl.shellexec.ShellExec
+
+task lolCowFortune(type: ShellExec) {
+    command "fortune | cowsay | lolcat"
 }
