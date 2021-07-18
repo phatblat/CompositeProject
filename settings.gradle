@@ -32,7 +32,7 @@ include ':app'
 // Clone ShellExec to sibling directory to build from source.
 File pluginProject = file("../ShellExec")
 if (pluginProject.exists()) {
-    // Include PipelineGradlePlugin project in composite build
+    logger.lifecycle("Including $pluginProject project in composite build.")
     includeBuild(pluginProject) {
         dependencySubstitution {
             substitute module('at.phatbl:shellexec') with project(':')

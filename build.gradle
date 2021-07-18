@@ -20,5 +20,12 @@ import at.phatbl.shellexec.ShellExec
 
 // task lolCowFortune(type: ShellExec) {
 tasks.register('lolCowFortune', ShellExec) {
+    group = "zzz"
     command "fortune | cowsay | lolcat"
+}
+
+tasks.register('clonePlugin', ShellExec) {
+    group = "zzz"
+    description = "Clones the ShellExec plugin project into a sibling directory."
+    command "git clone https://github.com/phatblat/ShellExec.git ../ShellExec"
 }
