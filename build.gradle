@@ -2,21 +2,35 @@
  * build.gradle
  */
 
+/*
 buildscript {
-    ext.kotlin_version = "1.5.10"
+    ext.kotlin_version = "1.5.21"
     repositories {
         google()
         mavenCentral()
         jcenter()
     }
     dependencies {
+        // Plugin ID: com.android.application
         classpath "com.android.tools.build:gradle:$agp_version"
+
+        // Plugin ID: org.jetbrains.kotlin.android
+        // https://plugins.gradle.org/plugin/org.jetbrains.kotlin.android
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+
+        // Plugin ID: at.phatbl.shellexec
         classpath 'at.phatbl:shellexec:+'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+}
+*/
+
+plugins {
+    id 'com.android.application' version '4.2.2' apply false
+    id "org.jetbrains.kotlin.android" version "1.5.21" apply false
+    id "at.phatbl.shellexec" version "1.5.2"
 }
 
 allprojects {
