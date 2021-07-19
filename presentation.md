@@ -1,8 +1,9 @@
 autoscale: true
 build-lists: true
-slidenumbers: true
+slidenumbers: false
 theme: Fira, 2
 list: alignment(left)
+[.footer-style: alignment(right)]
 
 ![fit](images/360AnDev_logo-nobg-2021.png)
 
@@ -14,14 +15,25 @@ list: alignment(left)
 
 ^
 https://360andev.com/session/gradle-isnt-just-a-bad-word/
+Inspired by my Mobile DevOps experience supporting Android developers
+building gradle plugins
+including one that coordinated the Android Gradle Plugin
 
 ---
 
-Execution failed for task ':app:processDebugResources'.
-> A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
-   > AAPT2 aapt2-4.0.1-6197926-linux Daemon #0: Unexpected error during link, attempting to stop daemon.
-     This should not happen under normal circumstances, please file an issue if it does.
+![fit](images/meme.jpg)
 
+^
+The way Android devs use the word "gradle" it sounds like profanity
+only hear it when their build breaks.
+
+---
+
+# Goals 🎯
+
+- reduce fear of Gradle
+- help you understand Stack Overflow snippets
+- new tools to help debug builds
 
 ---
 
@@ -33,6 +45,10 @@ Execution failed for task ':app:processDebugResources'.
 - 🔌 Plugins
 - 👩‍👩‍👧‍👦 Dependencies
 - 🧱 Composite Projects
+
+^
+Composite projects are a neat trick for debugging and/or modifying a dependency
+while testing it inside your app!
 
 ---
 
@@ -48,6 +64,9 @@ Execution failed for task ':app:processDebugResources'.
 
 ![](images/snoop.jpg)
 
+^
+no, not that kind of rapper
+
 ---
 
 ## Wrapper
@@ -61,61 +80,10 @@ Execution failed for task ':app:processDebugResources'.
 └── gradlew.bat
 ```
 
----
-
-## Invoking the Wrapper
-
-- `./gradlew taskName`
-- `gradlew.bat taskName`
-
 ^
-Task names can be partial; the minimum of the camel-case letters to uniquely identify the task
-
----
-
-# Wrapper Function (Bash & Z Shell)
-
-```
-function gw {
-    if [ -e ./gradlew ]; then
-        ./gradlew $argv
-        return
-    fi
-
-    echo "There is no Gradle wrapper in the current dir."
-    gradle $argv
-}
-```
----
-
-# Wrapper Function (Fish Shell)
-
-```
-function gw
-    if test -e ./gradlew
-        ./gradlew $argv
-        return
-    end
-
-    echo "There is no Gradle wrapper in the current dir."
-    gradle $argv
-end
-```
-
----
-
-## Project Hierarchy
-
-```
-Root project 'CompositeProject'
-+--- Project ':app'
-\--- Project ':module'
-```
-
-
-^
-Gradle uses semicolon as Hierarchy notation
-a single semicolon references the "root" project in a multi-project
+no need to install gradle
+wrapper pins version of gradle
+check these files into git
 
 ---
 
@@ -143,7 +111,78 @@ a single semicolon references the "root" project in a multi-project
 
 ---
 
-Invoking Gradle from the CLI
+## Project Hierarchy
+
+```
+Root project 'CompositeProject'
++--- Project ':app'
+\--- Project ':module'
+```
+
+View using the "projects" task.
+
+
+^
+Each line lists a gradle project within a multi-project setup.
+Every Android project is a multi-project where the root is just for configuration.
+Gradle uses semicolon as Hierarchy notation
+a single semicolon references the "root" project in a multi-project
+
+
+---
+
+# Invoking Gradle from the CLI
+
+---
+
+## Invoking the Wrapper
+
+- `./gradlew taskName`
+- `gradlew.bat taskName`
+- `gw taskName`
+
+^
+Always run from root of the repo.
+./ is needed on unix since the current dir is not on the PATH
+
+---
+
+# Wrapper Function (Bash & Z Shell)
+
+```
+function gw {
+    if [ -e ./gradlew ]; then
+        ./gradlew $argv
+        return
+    fi
+
+    echo "There is no Gradle wrapper in the current dir."
+    gradle $argv
+}
+```
+
+[.footer: ~/.bashrc or ~/.zshrc]
+
+^
+Put this in your .bashrc or .zshrc
+
+---
+
+# Wrapper Function (Fish Shell)
+
+```
+function gw
+    if test -e ./gradlew
+        ./gradlew $argv
+        return
+    end
+
+    echo "There is no Gradle wrapper in the current dir."
+    gradle $argv
+end
+```
+
+[.footer: ~/.config/fish/functions/[gw.fish](https://github.com/phatblat/dotfiles/blob/master/.config/fish/functions/gw.fish)]
 
 ---
 
@@ -167,8 +206,14 @@ Invoking Gradle from the CLI
 
 # Tasks
 
-- tasks
-- tasks --all
+- `gw tasks`
+- `gw tasks --all`
+
+![inline fit](images/tasks.png)
+
+^
+without --all only dasks which have a "group" are shown
+the group name is "zzz"
 
 ---
 
@@ -189,6 +234,25 @@ Invoking Gradle from the CLI
 ## Plugins Block
 ## Maven Coordinates vs Plugin ID
 
+
+---
+
+## Buildscript Block
+
+^
+dependencies (plugins) always use "classpath"
+
+---
+
+## Plugins Block
+
+^
+Android Studio 4.2 uses plugins block in subprojects/modules
+
+---
+
+## Maven Coordinates vs Plugin ID
+
 ---
 
 # Dependencies
@@ -197,3 +261,65 @@ Invoking Gradle from the CLI
 ---
 
 # Composite Projects
+
+---
+
+```
+includeBuild(file("../ShellExec")) {
+    dependencySubstitution {
+        substitute module('at.phatbl:shellexec') with project(':')
+    }
+}
+```
+
+^
+Tells gradle to substitute the dependency with the given project
+
+---
+
+↪ gw clonePlugin cloneRetrofit
+
+> Task :clonePlugin
+Cloning into '../ShellExec'...
+
+> Task :cloneRetrofit
+Cloning into '../retrofit'...
+
+
+↪ gw projects
+Including /Users/phatblat/dev/android/ShellExec project in composite build.
+Including /Users/phatblat/dev/android/retrofit project in composite build.
+
+
+
+
+---
+
+https://github.com/phatblat/CompositeProject
+
+---
+
+# Problem
+
+^
+If I've been successful, then we have a problem.
+You've just lost a bad word from your vocabulary.
+
+---
+
+# Profanity 🤬
+
+- frak
+- p'tak
+- frell
+- cruk
+- shazbot
+- kriff
+- gorram
+
+^
+https://gizmodo.com/10-scifi-curse-words-for-all-occasions-1792827239
+
+---
+
+> kriffing nerf herder
