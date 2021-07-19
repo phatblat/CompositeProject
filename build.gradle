@@ -17,16 +17,42 @@ subprojects {
     }
 }
 
+/*
+ * tasks
+ */
+
 import at.phatbl.shellexec.ShellExec
 
 // task fortune(type: ShellExec) {
 tasks.register('fortune', ShellExec) {
     group = "zzz"
+    description = "An example script task."
     command "fortune | cowsay | lolcat --force"
 }
+
+abstract class GreetingTask extends DefaultTask {
+    GreetingTask() {
+        group = "zzz"
+        description = "An example task class."
+    }
+
+    @TaskAction
+    def greet() {
+        println 'hello from GreetingTask'
+    }
+}
+
+// Create a task using the task type
+tasks.register('hello', GreetingTask)
 
 tasks.register('clonePlugin', ShellExec) {
     group = "zzz"
     description = "Clones the ShellExec plugin project into a sibling directory."
     command "git clone https://github.com/phatblat/ShellExec.git ../ShellExec"
+}
+
+tasks.register('cloneRetrofit', ShellExec) {
+    group = "zzz"
+    description = "Clones the Retrofit project into a sibling directory."
+    command "git clone https://github.com/square/retrofit.git ../retrofit"
 }
