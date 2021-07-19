@@ -1,7 +1,7 @@
 autoscale: true
 build-lists: true
 slidenumbers: true
-theme: Next, 4
+theme: Fira, 2
 
 # Gradle Isn't Just a
 # Bad Word
