@@ -30,13 +30,24 @@ include ':module'
  * Composite Project configurations.
  */
 
-// Clone ShellExec to sibling directory to build from source.
+// Run the 'clonePlugin' gradle task to install ShellExec in a sibling directory to build from source.
 File pluginProject = file("../ShellExec")
 if (pluginProject.exists()) {
     logger.lifecycle("Including $pluginProject project in composite build.")
     includeBuild(pluginProject) {
         dependencySubstitution {
             substitute module('at.phatbl:shellexec') with project(':')
+        }
+    }
+}
+
+// Run the 'cloneRetrofit' gradle task to install ShellExec in a sibling directory to build from source.
+File retrofitProject = file("../retrofit")
+if (retrofitProject.exists()) {
+    logger.lifecycle("Including $retrofitProject project in composite build.")
+    includeBuild(pluginProject) {
+        dependencySubstitution {
+            substitute module('com.squareup.retrofit2:retrofit') with project(':retrofit')
         }
     }
 }
