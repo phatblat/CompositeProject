@@ -19,10 +19,10 @@ subprojects {
 
 import at.phatbl.shellexec.ShellExec
 
-// task lolCowFortune(type: ShellExec) {
-tasks.register('lolCowFortune', ShellExec) {
+// task fortune(type: ShellExec) {
+tasks.register('fortune', ShellExec) {
     group = "zzz"
-    command "fortune | cowsay | lolcat"
+    command "fortune | cowsay | lolcat --force"
 }
 
 tasks.register('clonePlugin', ShellExec) {
