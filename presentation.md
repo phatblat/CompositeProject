@@ -2,8 +2,13 @@ autoscale: true
 build-lists: true
 slidenumbers: true
 theme: Fira, 2
+list: alignment(left)
 
-# Gradle Isn't Just a
+![fit](images/360AnDev_logo-nobg-2021.png)
+
+---
+
+## Gradle Isn't Just a
 # Bad Word
 # 🤬
 
@@ -12,32 +17,111 @@ https://360andev.com/session/gradle-isnt-just-a-bad-word/
 
 ---
 
+# Agenda 🗓
+
+- 🏛 Project Structure
+- ⌨️ Invoking Gradle from the CLI
+- ✅ Creating Tasks
+- 🔌 Plugins
+- 👩‍👩‍👧‍👦 Dependencies
+- 🧱 Composite Projects
+
+---
+
 # Gradle Project Structure
+
+- Wrapper
+- File Layout
+- Project Hierarchy
+
+---
+
+## Rapper?
+
+![](images/snoop.jpg)
+
+---
 
 ## Wrapper
 
+```
 └─── gradle
 │   └── wrapper
 │       └── gradle-wrapper.jar
 │       └── gradle-wrapper.properties
 ├── gradlew
 └── gradlew.bat
+```
 
-       │ File: gradle/wrapper/gradle-wrapper.properties
-───────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-   1   │ #Sat Jul 17 18:48:29 MDT 2021
-   2   │ distributionBase=GRADLE_USER_HOME
-   3   │ distributionUrl=https\://services.gradle.org/distributions/gradle-6.7.1-bin.zip
-   4   │ distributionPath=wrapper/dists
-   5   │ zipStorePath=wrapper/dists
-   6   │ zipStoreBase=GRADLE_USER_HOME
+---
+
+## Invoking the Wrapper
+
+- `./gradlew taskName`
+- `gradlew.bat taskName`
+
+^
+Task names can be partial; the minimum of the camel-case letters to uniquely identify the task
+
+---
+
+# Wrapper Function (Bash & Z Shell)
+
+```
+function gw {
+    if [ -e ./gradlew ]; then
+        ./gradlew $argv
+        return
+    fi
+
+    echo "There is no Gradle wrapper in the current dir."
+    gradle $argv
+}
+```
+---
+
+# Wrapper Function (Fish Shell)
+
+```
+function gw
+    if test -e ./gradlew
+        ./gradlew $argv
+        return
+    end
+
+    echo "There is no Gradle wrapper in the current dir."
+    gradle $argv
+end
+```
+
+---
 
 ## Project Hierarchy
 
-Root project 'CompositeProject' (:)
+```
+Root project 'CompositeProject'
 +--- Project ':app'
 \--- Project ':module'
+```
 
+
+^
+Gradle uses semicolon as Hierarchy notation
+a single semicolon references the "root" project in a multi-project
+
+---
+
+## Files
+
+- build.gradle
+- settings.gradle
+- gradle.properties
+
+---
+
+## Android/Gradle Scripts
+
+```
 .
 ├── app
 │   └── build.gradle
@@ -47,12 +131,13 @@ Root project 'CompositeProject' (:)
 ├── module
 │   └── build.gradle
 └── settings.gradle
+```
 
-## Files
+---
 
-- build.gradle
-- settings.gradle
-- gradle.properties
+Invoking Gradle from the CLI
+
+---
 
 ## Input
 
@@ -60,6 +145,8 @@ Root project 'CompositeProject' (:)
 - gradle.properties
 - ~/.gradle/gradle.properties
 - -Pproperty=value
+
+---
 
 ## Output
 
@@ -74,6 +161,8 @@ Root project 'CompositeProject' (:)
 
 - tasks
 - tasks --all
+
+---
 
 ## Creating Tasks
 
