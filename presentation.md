@@ -17,6 +17,14 @@ https://360andev.com/session/gradle-isnt-just-a-bad-word/
 
 ---
 
+Execution failed for task ':app:processDebugResources'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+   > AAPT2 aapt2-4.0.1-6197926-linux Daemon #0: Unexpected error during link, attempting to stop daemon.
+     This should not happen under normal circumstances, please file an issue if it does.
+
+
+---
+
 # Agenda 🗓
 
 - 🏛 Project Structure
