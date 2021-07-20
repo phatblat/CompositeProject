@@ -439,13 +439,25 @@ Version ranges probably only useful for libraries.
 # Dynamic Versions
 
 - `+` - any version
-- `1.+` - 1.*
+- `1.+` - any v1 minor version
+- `1.2.+` - any v1.2 patch version
 - Version cached for 24h
   - Force check with `--refresh-dependencies`
 
 ^
 Gradle feature, not maven
-Gradle doesn't have lockfiles like other package managers
+Gradle has dependency locking, but I haven't used it
+
+---
+
+# Dynamic Version Caveats
+
+- Discouraged by Google
+- Build non-determinism if dependency updates are being released
+- Slower dependency resolution
+  - Every repo is checked for dependency versions
+
+^
 Every repo in list is searched, even after match is found
 Google moved plugin from jcenter to their own repo
 builds failed if jcenter listed before google
