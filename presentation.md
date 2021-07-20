@@ -37,6 +37,13 @@ only hear it when their build breaks.
 
 ---
 
+## github.com/phatblat/CompositeProject
+
+^
+My bot will paste that URL into Slack
+
+---
+
 # Agenda 🗓
 
 - 🏛 Project Structure
@@ -55,8 +62,12 @@ while testing it inside your app!
 # Gradle Project Structure
 
 - Wrapper
+- Ignore
 - File Layout
 - Project Hierarchy
+
+^
+First, the rapper
 
 ---
 
@@ -69,7 +80,7 @@ no, not that kind of rapper
 
 ---
 
-## Wrapper
+# Wrapper
 
 ```
 └─── gradle
@@ -82,32 +93,88 @@ no, not that kind of rapper
 
 ^
 no need to install gradle
-wrapper pins version of gradle
+wrapper pins version of gradle in your project
 check these files into git
 
 ---
 
-## Files
+# Ignore
+
+- .gradle/
+- build/
+
+^
+No preceding slash will ignore all build dirs
+
+---
+
+# Gradle Files
 
 - build.gradle
 - settings.gradle
 - gradle.properties
 
+^
+Groovy plus a custom DSL
+can put any valid groovy or java in a .gradle file, provided the DSL syntax allows
+
 ---
 
-## Android/Gradle Scripts
+# Kotlin Script
 
-```
-.
-├── app
-│   └── build.gradle
-├── build.gradle
-├── gradle.properties
-├── local.properties
-├── module
-│   └── build.gradle
-└── settings.gradle
-```
+- build.gradle.kts
+- settings.gradle.kts
+
+^
+Don't use it; don't feel bad if you aren't
+Kotlin script hasn't been very well supported by Android Studio
+Most sample Gradle build scripts will be in Groovy
+
+---
+
+# build.gradle
+
+- gradle DSL
+- plugin "extension" DSLs
+
+---
+
+# settings.gradle
+
+- rootProject.name
+- multi-project configuration (`include`)
+- composite configuration (`includeBuild`)
+
+^
+Only place root project name can be tailored. Defaults to folder name
+
+---
+
+# gradle.properties
+
+- Comment lines with `#`
+- Leading/trailing whitespace ignored `key = value`
+- Values read as `String`
+- Properties inherited by subprojects
+  - AGP 4.2+ ignores these files in subprojects [^1]
+
+[^1]: See the AGP 4.2 [release notes](https://developer.android.com/studio/releases/gradle-plugin)
+
+^
+Java properties syntax
+Need special handling for Integers
+Properties defined in the root project are visible in subprojects, but can be overridden
+Causes confusion where to put values
+
+---
+
+## local.properties
+
+- `sdk.dir`
+- `ndk.dir`
+
+^
+Only used by AGP for a few dir values
 
 ---
 
@@ -121,13 +188,11 @@ Root project 'CompositeProject'
 
 View using the "projects" task.
 
-
 ^
 Each line lists a gradle project within a multi-project setup.
 Every Android project is a multi-project where the root is just for configuration.
 Gradle uses semicolon as Hierarchy notation
 a single semicolon references the "root" project in a multi-project
-
 
 ---
 
@@ -202,9 +267,52 @@ end
 - stacktrace
 - build scans
 
+^
+Options to control output
+
+---
+
+## --console
+
+-
+- `plain`
+
+---
+
+## Log Levels
+
+- error: -q, --quiet
+- warn: -w, --warn
+- lifecycle (default)
+- -i, --info
+- -d, --debug
+
+^
+debug can include sensitive info
+
+---
+
+## Stack Trace
+
+- -s, --stacktrace
+- -S, --full-stacktrace
+
+^
+Print out the full (very verbose) stacktrace for all exceptions.
+
+---
+
+## Build --scan
+
+--scan
+
 ---
 
 # Tasks
+
+---
+
+# Listing Tasks
 
 - `gw tasks`
 - `gw tasks --all`
@@ -224,20 +332,34 @@ the group name is "zzz"
 ## dependsOn
 ## Dry Run
 
---dry-run
--m
+-m, --dry-run
 
 ---
 
-# Plugins
-## Buildscript
-## Plugins Block
-## Maven Coordinates vs Plugin ID
+# Configuring Plugins
 
+- Buildscript
+- Plugins Block
+- Maven Coordinates vs Plugin ID
 
 ---
 
 ## Buildscript Block
+
+```
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'at.phatbl:shellexec:+'
+    }
+}
+
+apply plugin: "at.phatbl.shellexec"
+```
 
 ^
 dependencies (plugins) always use "classpath"
@@ -246,21 +368,130 @@ dependencies (plugins) always use "classpath"
 
 ## Plugins Block
 
+```
+plugins {
+  id "at.phatbl.shellexec" version "1.5.2"
+}
+```
+
+- version only needed in root project
+- auto-applies plugin to the current project
+  - opt out with: `apply false`
+
 ^
 Android Studio 4.2 uses plugins block in subprojects/modules
 
 ---
 
+# Maven Coordinates
+
+- group ID
+- artifact ID
+- version
+- packaging type (optional)
+
+^
+components separated by colon
+except packaging is prefixed with @
+
+---
+
+# Maven Group ID
+
+- typically reverse-domain syntax of author
+- phatbl.at <-> at.phatbl
+- org.jetbrains.kotlin
+- com.android.tools.build
+
+^
+authors with lots of published libraries may use many groups
+
+---
+
+# Maven Artifact ID
+
+- library name
+- typically words separated by dash
+  - e.g. `protobuf-gradle-plugin`
+
+---
+
+# Version
+
+- Semantic verion number
+- Rolling `-SNAPSHOT`s
+- Optional pre-release qualifier (e.g. 1.0-alpha-3)
+
+---
+
+### Specifying versions
+
+- Support for version ranges [^2]
+- Dynamic versions (`+`)
+
+[^2]: Maven Dependency [Version Requirement Spec](https://maven.apache.org/pom.html#dependency-version-requirement-specification)
+
+^
+Version ranges probably only useful for libraries.
+
+---
+
+# Dynamic Versions
+
+- `+` - any version
+- `1.+` - 1.*
+- Version cached for 24h
+  - Force check with `--refresh-dependencies`
+
+^
+Gradle feature, not maven
+Gradle doesn't have lockfiles like other package managers
+Every repo in list is searched, even after match is found
+Google moved plugin from jcenter to their own repo
+builds failed if jcenter listed before google
+
+---
+
+# Plugin ID
+
+- Used when applying plugins
+- Used in newer Gradle `plugins` block
+
+---
+
 ## Maven Coordinates vs Plugin ID
+
+- `at.phatbl:shellexec:1.0.0`
+- `at.phatbl.shellexec`
+- View on plugins.gradle.org for most plugins
+
+^
+AGP published to google's maven repo
 
 ---
 
 # Dependencies
-## Implementation, Api and Compile
+
+- Configuration (implementation, api)
+- Viewing
+
+---
+
+# Configuration
+
+- compile (don't use)
+- implementation (use this)
+- api - for libraries, when types defined in a dependency are exposed by your public API
+
+^
+compile removed in Gradle 7
 
 ---
 
 # Composite Projects
+
+https://docs.gradle.org/current/userguide/composite_builds.html
+gradle --include-build ../my-utils run
 
 ---
 
