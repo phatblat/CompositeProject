@@ -14,10 +14,8 @@ list: alignment(left)
 # 🤬
 
 ^
-https://360andev.com/session/gradle-isnt-just-a-bad-word/
 Inspired by my Mobile DevOps experience supporting Android developers
-building gradle plugins
-including one that coordinated the Android Gradle Plugin
+and building gradle plugins
 
 ---
 
@@ -35,11 +33,16 @@ only hear it when their build breaks.
 - help you understand Stack Overflow snippets
 - new tools to help debug builds
 
+^
+to help you understand what's going under the covers of Android Studio,
+use gradle directly on the command line in a Terminal window
+
 ---
 
 ## github.com/phatblat/CompositeProject
 
 ^
+I've worked up a companion project for this talk
 My bot will paste that URL into Slack
 
 ---
@@ -306,6 +309,9 @@ Print out the full (very verbose) stacktrace for all exceptions.
 
 --scan
 
+^
+Creates a sharable web report
+
 ---
 
 # Tasks
@@ -325,17 +331,33 @@ the group name is "zzz"
 
 ---
 
-## Creating Tasks
+# Creating Tasks
 
 ```
 tasks.register('hello') {
-    doLast { println 'hello world' }
+    doLast {
+        println 'hello world'
+    }
 }
 ```
 
 ^
 Goes in build.gradle
 doLast is the task action
+
+---
+
+# Example Tasks
+
+- buildTypes
+- productFlavors
+- flavorDimensions
+- buildVariants
+- variantFilter
+
+^
+companion project includes some simple gradle tasks
+along with some more advanced ones
 
 ---
 
@@ -350,22 +372,58 @@ tasks.register('fortune', ShellExec) {
 ![inline](images/shellexec.png)
 
 ^
-Supports any Bash syntax
+Gradle plugin to replace Exec
+Supports any Bash syntax in the command string
 
 ---
 
-## dependsOn
-## Dry Run
+# dependsOn
 
--m, --dry-run
+- Chains tasks
+
+```
+🙅🏻‍♀️ assembleDebug.dependOn(fortune)
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'assembleDebug') {
+        task.dependsOn(fortune)
+    }
+}
+```
+
+^
+Task graph is a DAG. After tree/graph is built, then task order is determined
+Not intuitive
+
+---
+
+# Dry Run
+
+- -m, --dry-run
+
+```
+↪ gw --dry-run assembleDebug
+:fortune SKIPPED
+:app:preBuild SKIPPED
+...
+:app:packageFullDebug SKIPPED
+:app:assembleFullDebug SKIPPED
+:app:assembleDebug SKIPPED
+..
+:module:compileDebugSources SKIPPED
+:module:assembleDebug SKIPPED
+```
 
 ---
 
 # Script Plugins
 
 ```
-apply from: "ktlint.gradle"
+apply from: "android-info.gradle"
 ```
+
+- File path
+- ~~URL~~
 
 ^
 Simple way to split up your build.gradle
@@ -375,7 +433,7 @@ Remote scripts can be applied with an HTTP URL, but that's a terrible idea
 
 # Binary Plugins
 
-- Buildscript
+- Buildscript Block
 - Plugins Block
 - Maven Coordinates vs Plugin ID
 
@@ -402,11 +460,12 @@ apply plugin: "at.phatbl.shellexec"
 ```
 
 ^
+only in root project
 dependencies (plugins) always use "classpath"
 
 ---
 
-## Plugins Block
+# Plugins Block
 
 ```
 plugins {
@@ -471,7 +530,7 @@ authors with lots of published libraries may use many groups
 
 ---
 
-### Specifying versions
+# Specifying versions
 
 - Support for version ranges [^2]
 - Dynamic versions (`+`)
@@ -556,7 +615,7 @@ compile removed in Gradle 7
 gw --include-build ../retrofit ...
 
 ^
-[Composite Builds](https://docs.gradle.org/current/userguide/composite_builds.html)
+Gradle has a CLI option to configure a composite project build
 
 ---
 
@@ -564,12 +623,16 @@ gw --include-build ../retrofit ...
 
 ```
 File retrofitProject = file("../retrofit")
-if (retrofitProject.exists()) {
-    includeBuild(retrofitProject)
+
+includeBuild(retrofitProject) {
+    dependencySubstitution {
+        substitute module('com.squareup.retrofit2:retrofit') with project(':retrofit')
+    }
 }
 ```
 
 ^
+Java file reference to root of build to include
 dependencySubstitution
 Tells gradle to substitute the dependency with the given project
 

@@ -9,11 +9,23 @@ plugins {
     id "at.phatbl.shellexec" version "${shellexec_version}" apply false
 }
 
+// task fortune(type: ShellExec) {
+def fortune = tasks.register('fortune', ShellExec) {
+    group = "zzz"
+    description = "An example script task."
+    command "fortune | cowsay | lolcat --force"
+}
+
 subprojects {
     repositories {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
+    }
+    tasks.whenTaskAdded { task ->
+        if (task.name == 'assembleDebug') {
+            task.dependsOn(fortune)
+        }
     }
 }
 
@@ -23,12 +35,7 @@ subprojects {
 
 import at.phatbl.shellexec.ShellExec
 
-// task fortune(type: ShellExec) {
-tasks.register('fortune', ShellExec) {
-    group = "zzz"
-    description = "An example script task."
-    command "fortune | cowsay | lolcat --force"
-}
+
 
 tasks.register('hello') {
     group = "zzz"
