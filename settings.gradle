@@ -45,7 +45,7 @@ if (pluginProject.exists()) {
 File retrofitProject = file("../retrofit")
 if (retrofitProject.exists()) {
     logger.lifecycle("Including $retrofitProject project in composite build.")
-    includeBuild(pluginProject) {
+    includeBuild(retrofitProject) {
         dependencySubstitution {
             substitute module('com.squareup.retrofit2:retrofit') with project(':retrofit')
         }
