@@ -30,6 +30,12 @@ tasks.register('fortune', ShellExec) {
     command "fortune | cowsay | lolcat --force"
 }
 
+tasks.register('hello') {
+    group = "zzz"
+    description = "An example task."
+    doLast { println 'hello world' }
+}
+
 abstract class GreetingTask extends DefaultTask {
     GreetingTask() {
         group = "zzz"
@@ -43,7 +49,9 @@ abstract class GreetingTask extends DefaultTask {
 }
 
 // Create a task using the task type
-tasks.register('hello', GreetingTask)
+tasks.register('hello2') {
+    doLast { println 'hello from GreetingTask' }
+}
 
 tasks.register('clonePlugin', ShellExec) {
     group = "zzz"
