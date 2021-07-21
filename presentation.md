@@ -62,6 +62,10 @@ while testing it inside your app!
 
 ---
 
+# Files
+
+---
+
 # Gradle Project Structure
 
 - Wrapper
@@ -416,6 +420,10 @@ Not intuitive
 
 ---
 
+# Plugins
+
+---
+
 # Script Plugins
 
 ```
@@ -590,21 +598,81 @@ AGP published to google's maven repo
 
 # Dependencies
 
-- Configuration (implementation, api)
-- Viewing
-
 ---
 
 # Configuration
 
 - compile (don't use)
 - implementation (use this)
+
+```
+implementation ...
+testImplementation ...
+```
+
+^
+configuration is a group of dependencies
+compile removed in Gradle 7
+
+---
+
+# Configuration
+
 - api - for modules & libraries
   - when types defined in a dependency are exposed by your public API
   - see app -> module.GitHub -> retrofit in example project
 
-^
-compile removed in Gradle 7
+---
+
+# List Plugins
+
+```
+↪ gw buildEnvironment
+
+classpath
++--- com.android.application:com.android.application.gradle.plugin:4.2.2
+|    \--- com.android.tools.build:gradle:4.2.2
+|    ...
+\--- at.phatbl.shellexec:at.phatbl.shellexec.gradle.plugin:1.5.2
+     \--- gradle.plugin.at.phatbl:shellexec:1.5.2
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.61 -> 1.5.21 (*)
+          +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.61 -> 1.4.31 (*)
+          \--- org.jetbrains.kotlin:kotlin-reflect:1.3.61 -> 1.5.21 (*)
+```
+
+---
+
+# Gradle Dependencies Task
+
+```
+↪ gw :app:dependencies --configuration implementation
+
+implementation - Implementation only dependencies for 'main' sources. (n)
++--- project module (n)
++--- org.jetbrains.kotlin:kotlin-stdlib:1.5.21 (n)
++--- androidx.core:core-ktx:1.6.0 (n)
++--- androidx.appcompat:appcompat:1.3.0 (n)
++--- com.google.android.material:material:1.4.0 (n)
+\--- androidx.constraintlayout:constraintlayout:2.0.4 (n)
+```
+
+---
+
+# Android Dependencies Task
+
+```
+↪ gw androidDependencies
+
+releaseUnitTestRuntimeClasspath - Dependencies for runtime/packaging
++--- :module (variant: release)
++--- junit:junit:4.13.2@jar
++--- com.squareup.retrofit2:converter-gson:2.9.0@jar
++--- com.squareup.retrofit2:adapter-java8:2.9.0@jar
++--- com.squareup.retrofit2:retrofit:2.9.0@jar
++--- androidx.core:core-ktx:1.6.0@aar
++--- com.google.code.gson:gson:2.8.5@jar
+\--- com.squareup.okio:okio:1.17.2@jar
+```
 
 ---
 
