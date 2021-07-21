@@ -749,4 +749,4 @@ https://gizmodo.com/10-scifi-curse-words-for-all-occasions-1792827239
 
 ---
 
-> kriffing nerf herder
+![fit](images/360AnDev_logo-nobg-2021.png)
