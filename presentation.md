@@ -327,7 +327,32 @@ the group name is "zzz"
 
 ## Creating Tasks
 
-- doLast
+```
+tasks.register('hello') {
+    doLast { println 'hello world' }
+}
+```
+
+^
+Goes in build.gradle
+doLast is the task action
+
+---
+
+# ShellExec
+
+```
+tasks.register('fortune', ShellExec) {
+    command "fortune | cowsay | lolcat --force"
+}
+```
+
+![inline](images/shellexec.png)
+
+^
+Supports any Bash syntax
+
+---
 
 ## dependsOn
 ## Dry Run
@@ -336,11 +361,26 @@ the group name is "zzz"
 
 ---
 
-# Configuring Plugins
+# Script Plugins
+
+```
+apply from: "ktlint.gradle"
+```
+
+^
+Simple way to split up your build.gradle
+Remote scripts can be applied with an HTTP URL, but that's a terrible idea
+
+---
+
+# Binary Plugins
 
 - Buildscript
 - Plugins Block
 - Maven Coordinates vs Plugin ID
+
+^
+Plugins extend the Gradle DSL (android) block, add tasks
 
 ---
 
@@ -388,11 +428,18 @@ Android Studio 4.2 uses plugins block in subprojects/modules
 - group ID
 - artifact ID
 - version
-- packaging type (optional)
+- classifier (optional)
+- extension (optional)
+
+```
+configurationName 'group:name:version:classifier@extension'
+configurationName group: group, name: name, version: version, classifier: classifier, ext: extension
+```
 
 ^
 components separated by colon
-except packaging is prefixed with @
+except extension is prefixed with @
+double quotes required if using a variable
 
 ---
 
@@ -493,33 +540,44 @@ AGP published to google's maven repo
 
 - compile (don't use)
 - implementation (use this)
-- api - for libraries, when types defined in a dependency are exposed by your public API
+- api - for modules & libraries
+  - when types defined in a dependency are exposed by your public API
+  - see app -> module.GitHub -> retrofit in example project
 
 ^
 compile removed in Gradle 7
 
 ---
 
-# Composite Projects
+# Composite Project
 
-https://docs.gradle.org/current/userguide/composite_builds.html
-gradle --include-build ../my-utils run
+![fit right](images/composite-project.png)
+
+gw --include-build ../retrofit ...
+
+^
+[Composite Builds](https://docs.gradle.org/current/userguide/composite_builds.html)
 
 ---
 
+# includeBuild
+
 ```
-includeBuild(file("../ShellExec")) {
-    dependencySubstitution {
-        substitute module('at.phatbl:shellexec') with project(':')
-    }
+File retrofitProject = file("../retrofit")
+if (retrofitProject.exists()) {
+    includeBuild(retrofitProject)
 }
 ```
 
 ^
+dependencySubstitution
 Tells gradle to substitute the dependency with the given project
 
 ---
 
+# Sample Project
+
+```
 ↪ gw clonePlugin cloneRetrofit
 
 > Task :clonePlugin
@@ -527,18 +585,81 @@ Cloning into '../ShellExec'...
 
 > Task :cloneRetrofit
 Cloning into '../retrofit'...
-
-
-↪ gw projects
-Including /Users/phatblat/dev/android/ShellExec project in composite build.
-Including /Users/phatblat/dev/android/retrofit project in composite build.
-
-
-
+```
 
 ---
 
-https://github.com/phatblat/CompositeProject
+# Sample Project
+
+```
+↪ gw projects
+Including .../ShellExec project in composite build.
+Including .../retrofit project in composite build.
+
+> Configure project :ShellExec
+...
+
+> Configure project :retrofit:retrofit
+...
+```
+
+---
+
+# Caveats
+
+- AGP version
+- Android build variants
+- Gradle plugin using same library
+
+---
+
+# AGP Version
+
+```
+> Failed to apply plugin 'com.android.internal.application'.
+   > Using multiple versions of the Android Gradle plugin in the same build is not allowed.
+     - Project `.../CompositeProject/app` is using version `4.2.2`
+     - Project `.../retrofit/retrofit/android-test` is using version `4.2.1`
+```
+
+---
+
+# Gradle Properties to the Rescue! 💪🏻
+
+gw -P**agp_version**=4.2.1 projects
+
+`> Configure project :retrofit:retrofit`
+
+^
+Once you verify that this works on the CLI, update the property and sync Android Studio
+
+---
+
+# Variants
+
+Comment out:
+
+- flavorDimensions
+- productFlavors
+
+^
+If you have problems
+couldn't reproduce
+
+---
+
+# Gradle plugin using same library
+
+- `includeBuild file("../retrofit")`
+
+```
+> Could not resolve com.squareup.retrofit2:retrofit:2.7.1.
+    Required by:
+        project :retrofit > com.vanniktech:gradle-maven-publish-plugin:0.14.0
+        project :retrofit > com.vanniktech:gradle-maven-publish-plugin:0.14.0 > com.squareup.retrofit2:converter-moshi:2.7.1
+```
+
+- Removed the gradle-maven-publish-plugin from retrofit
 
 ---
 
