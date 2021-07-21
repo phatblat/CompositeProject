@@ -1,0 +1,94 @@
+
+/** Unfiltered list of variants used in buildVariants task */
+def allVariantNames = []
+
+/** Debug logging of variant filter. */
+def variantFilterResults = []
+
+// apply plugin: 'com.android.application'
+
+android {
+    variantFilter { variant ->
+        // Save unfiltered list of variant names
+        allVariantNames << variant.name
+
+        // Flavor(s) included in this variant
+        def names = variant.flavors*.name
+
+        // To check for a certain build type, use variant.buildType.name == "<buildType>"
+        // if (names.contains("minApi21") && names.contains("demo")) {
+        //     // Gradle ignores any variants that satisfy the conditions above.
+        //     setIgnore(true)
+        // }
+
+        String ignored = variant.ignore ? "*** TRUE ***" : "false"
+
+        // Log of filter details is shown when variantFilter task is invoked
+        variantFilterResults << "variant: ${variant.name}, buildType: ${variant.buildType.name}, flavors: $names, ignored: $ignored"
+    }
+}
+
+/* ---------------------------------------------------------------------------------------------- */
+
+task buildTypes {
+    description = "Lists all Android build types."
+    group = "Z Android Info"
+    doLast {
+        android.buildTypes.eachWithIndex { buildType, index ->
+            logger.lifecycle "${index + 1} - ${buildType.name}"
+        }
+    }
+}
+
+task productFlavors {
+    description = "Lists all Android product flavors."
+    group = "Z Android Info"
+    doLast {
+        if (!android.productFlavors || android.productFlavors.isEmpty()) {
+            print "No product flavors"
+        } else {
+            android.productFlavors.eachWithIndex { flavor, index ->
+                logger.lifecycle "${index + 1} - ${flavor.name}"
+            }
+        }
+    }
+}
+
+task flavorDimensions {
+    description = "Lists all Android product flavor dimensions."
+    group = "Z Android Info"
+    doLast {
+        if (!android.flavorDimensionList || android.flavorDimensionList.isEmpty()) {
+            print "No flavor dimensions"
+        } else {
+            android.flavorDimensionList.eachWithIndex { dimension, index ->
+                logger.lifecycle "${index + 1} - $dimension"
+            }
+        }
+    }
+}
+
+task buildVariants {
+    description = "Lists all Android build variants."
+    group = "Z Android Info"
+    doLast {
+        // Library projects should use libraryVariants
+        def activeVariants = android.applicationVariants*.name
+        def filteredVariants = allVariantNames
+
+        activeVariants.eachWithIndex { variantName, index ->
+            logger.lifecycle "${index + 1} - $variantName"
+            filteredVariants.remove(variantName)
+        }
+
+        logger.lifecycle "\nFiltered variants: \n- ${filteredVariants.join("\n- ")}"
+    }
+}
+
+task variantFilter {
+    description = "Shows variant filter details."
+    group = "Z Android Info"
+    doLast {
+        logger.lifecycle variantFilterResults.join("\n")
+    }
+}
