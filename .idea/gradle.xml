@@ -4,14 +4,79 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/../ShellExec" name="ShellExec">
+                <projects>
+                  <project path="$PROJECT_DIR$/../ShellExec" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../retrofit" name="retrofit">
+                <projects>
+                  <project path="$PROJECT_DIR$/../retrofit" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters/guava" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters/java8" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters/rxjava" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters/rxjava2" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters/rxjava3" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-adapters/scala" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/gson" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/guava" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/jackson" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/java8" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/jaxb" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/moshi" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/protobuf" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/scalars" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/simplexml" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-converters/wire" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit-mock" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit/android-test" />
+                  <project path="$PROJECT_DIR$/../retrofit/retrofit/test-helpers" />
+                  <project path="$PROJECT_DIR$/../retrofit/samples" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="testRunner" value="PLATFORM" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="$USER_HOME$/.sdkman/candidates/gradle/current" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/module" />
+            <option value="$PROJECT_DIR$/../ShellExec" />
+            <option value="$PROJECT_DIR$/../retrofit" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters/guava" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters/java8" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters/rxjava" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters/rxjava2" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters/rxjava3" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-adapters/scala" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/gson" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/guava" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/jackson" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/java8" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/jaxb" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/moshi" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/protobuf" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/scalars" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/simplexml" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-converters/wire" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit-mock" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit/android-test" />
+            <option value="$PROJECT_DIR$/../retrofit/retrofit/test-helpers" />
+            <option value="$PROJECT_DIR$/../retrofit/samples" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
